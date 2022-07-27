@@ -1,0 +1,55 @@
+
+pipeline {
+    agent any
+    tools {
+        maven 'maven'
+    }
+    stages {
+        stage('git checkout') {
+            steps {
+    git branch: 'main', url: 'https://github.com/adirremi/demospring'
+            }
+        }
+        stage("chmod"){
+            steps{
+      sh 'chmod +x mvnw'
+      }
+            } 
+       stage("mvn install"){
+            steps{
+                sh 'mvn install'
+            }
+        }
+        stage("dockerbuild"){
+            steps{
+      sh 'docker build -t springbootmaven .'
+      }
+            }
+
+                  
+        stage("docker run"){
+            steps{
+                sh 'docker run -d -p 80:80 springbootmaven > dockerid.txt'
+            }
+        }
+                stage("sainty test"){
+            steps{
+                sh './mvnw test'
+            }
+        }
+                       stage("get rquest test"){
+            steps{
+                sh '''#!/bin/bash
+check=$(curl http://localhost:80/ )
+echo $check
+docker stop $(cat dockerid.txt)
+if [[ "$check" != "Hello World!" ]]
+then
+echo something went wrong
+exit 1
+fi'''
+
+            }
+        }
+        }
+    }
