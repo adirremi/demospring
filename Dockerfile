@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} target/application.jar
-RUN java -Djarmode=layertools -jar target/application.jar -Dserver.port=8181 extract --destination target/extracted 
+RUN java -Djarmode=layertools -jar target/application.jar extract --destination target/extracted 
 
 FROM openjdk:8-jdk-alpine
 RUN addgroup -S demo && adduser -S demo -G demo
