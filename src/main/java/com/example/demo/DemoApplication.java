@@ -18,9 +18,5 @@ public class DemoApplication {
 		System.getProperties().put( "server.port", 8181 );
 		SpringApplication.run(DemoApplication.class, args);
 	}
-@Override  
-public void customize(ConfigurableEmbeddedServletContainer container)   
-{  
-container.setPort(8181);  
-}  
+
 }
